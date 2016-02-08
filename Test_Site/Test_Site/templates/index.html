@@ -1,0 +1,87 @@
+{% load i18n %}
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <title>{% block title %}User test{% endblock %}</title>
+{% block headmeta %}{% endblock %}
+{% block sitehead %}
+    <meta name="viewport" content="width=device-width, initial-scale=1"/>
+    <!-- It is important to put the bootstrap scripts in the head -->
+  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
+  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
+ {% endblock %}
+ {% block pagehead %}
+ {% endblock %}
+</head>
+
+<body>
+{% block nav %}
+<nav class="navbar navbar-inverse" id="navbar">
+  <div class="container-fluid">
+    <div class="navbar-header">
+      <a class="navbar-brand" href="/"><span class="badge">Calnet</span></a>
+    </div>
+    <ul class="nav navbar-nav">
+        <li><a href="/Test_App">Home</a> </li>
+          <li><a href="/Test_App/Files">Repository</a> </li>
+
+        {% if user.is_authenticated %}
+            </ul>
+      <ul class="nav navbar-nav navbar-right">
+      <li><a href="/accounts/user_info/"><span class="glyphicon glyphicon-user"></span> {% trans "Logged in" %}: {{ user.username }}</a></li>
+      <li><a href="{% url 'auth_logout' %}"><span class="glyphicon glyphicon-log-out"></span> Logout</a></li>
+    </ul>
+
+
+	{% else %}
+          </ul>
+      <ul class="nav navbar-nav navbar-right">
+      <li><a href="/accounts/register/"><span class="glyphicon glyphicon-user"></span> Sign Up</a></li>
+      <li><a href="{% url 'auth_login' %}"><span class="glyphicon glyphicon-log-in"></span> Login</a></li>
+    </ul>
+
+	{% endif %}
+
+      <form class="navbar-form navbar-right" role="search">
+    <div class="form-group">
+    <input type="text" class="form-control" placeholder="Search">
+    </div>
+    <button type="submit" class="btn btn-default"><span class="glyphicon glyphicon-search"></span></button>
+    </form>
+  </div>
+</nav>
+{% endblock %}
+
+
+    </div>
+
+    <div class="container-fluid" id="content">
+        {% block content %}<h1> Welcome to a Test Site </h1>
+        <hr/>
+        <h2>This is a random science picture</h2>
+        <img src=""
+
+
+        {% endblock %}
+    </div>
+
+    <div id="footer">
+        {% block footer %}
+        <hr />
+        {% endblock %}
+    </div>
+{% block bodyscripts %}
+<!--
+<script>
+$(document).ready(function() {
+$("#navbar").click(function(){$("#navbar").removeClass().addClass("nav navbar-inverse");})});
+</script>
+-->
+{% endblock %}
+</body>
+
+</html>
