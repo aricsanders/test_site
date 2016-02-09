@@ -42,10 +42,25 @@ def FileView(request):
 
             return HttpResponseRedirect(reverse('Files'))
     else:
-        form = UploadCanvasForm()
+        form = UploadFileForm()
 
     data = {'form': form}
     return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+@login_required
+def CanvasView2(request):
+    if request.method == 'POST':
+        form = UploadFileForm2(request.POST, request.FILES)
+        if form.is_valid():
+            new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+            new_file.save()
+
+            return HttpResponseRedirect(reverse('Canvas2'))
+    else:
+        form = UploadFileForm()
+
+    data = {'form': form}
+    return render_to_response('canvas_template2.html', data, context_instance=RequestContext(request))
+
 
 class CanvasView(TemplateView):
     template_name='canvas_template.html'
