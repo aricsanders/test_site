@@ -39,7 +39,7 @@
  {% block content %}
 <div class="literally export-svg"></div>
 
-<form class="controls export-svg">{% csrf_token %}
+<form class="controls export-svg">
   <input action="post" class="btn btn-primary" type="submit" data-action="export-as-svg" value="Export as SVG" />
 
 </form>
@@ -50,13 +50,15 @@
   $(document).ready(function() {
              var url
              var posturl
+             var csrfToken
+             csrfToken="{% csrf_token %}"
              posturl="{% url 'Canvas2' %}"
             url="{% static 'Test_App/img'%}"
     var lc = LC.init(document.getElementsByClassName('literally export-svg')[0],{imageURLPrefix: url });
     $('.controls.export-svg [data-action=export-as-svg]').click(function(e) {
       e.preventDefault();
       var svgString = lc.getSVGString();
-      $.post(posturl,"file:image/svg+xml;base64," + btoa(svgString));
+      $.post(posturl,"file:image/svg+xml;base64," + btoa(svgString)+",csrf:csrfToken");
     });
   });
 </script>
