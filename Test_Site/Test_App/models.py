@@ -59,3 +59,7 @@ class UploadFile(models.Model):
     file = models.FileField(upload_to=user_directory_path)
 class UploadFile2(models.Model):
     file = models.FileField(upload_to=user_directory_path)
+
+class UploadCanvas(models.Model):
+    owner=models.ForeignKey(User)
+    file = models.FileField(upload_to=user_directory_path)

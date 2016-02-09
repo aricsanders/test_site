@@ -30,6 +30,8 @@ def user_info(request):
 urlpatterns = [
     url(r'^$', IndexView.as_view(),name='index'),
     url(r'^Files', FileView, name='Files'),
+    url(r'^Canvas', CanvasView.as_view(), name='Canvas')
+
 
 ]
 

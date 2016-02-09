@@ -7,7 +7,7 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
-from forms import UploadFileForm,UploadFileForm2
+from forms import *
 from models import UploadFile,UploadFile2
 
 # 3rd party Imports
@@ -42,7 +42,23 @@ def FileView(request):
 
             return HttpResponseRedirect(reverse('Files'))
     else:
-        form = UploadFileForm2()
+        form = UploadCanvasForm()
 
     data = {'form': form}
     return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+
+class CanvasView(TemplateView):
+    template_name='canvas_template.html'
+# def CanvasView(request):
+#     if request.method == 'POST':
+#         form = UploadCanvasForm(request.POST, request.FILES)
+#         if form.is_valid():
+#             new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+#             new_file.save()
+#
+#             return HttpResponseRedirect(reverse('Canvas'))
+#     else:
+#         form = UploadCanvasForm()
+#
+#     data = {'form': form}
+#     return render_to_response('canvas_template.html', data, context_instance=RequestContext(request))
