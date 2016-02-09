@@ -20,3 +20,4 @@ class UploadCanvasForm(forms.ModelForm):
     class Meta:
         model = UploadFile
         fields=['owner','file']
+

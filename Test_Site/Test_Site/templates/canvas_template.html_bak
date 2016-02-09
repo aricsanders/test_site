@@ -1,0 +1,38 @@
+{% extends "index.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block pagehead %}
+   <!-- stylesheet -->
+    <link href="{% static 'Test_App/js/literallycanvas.css' %}" rel="stylesheet" />
+
+    <!-- dependency: React.js -->
+    <script src="//cdnjs.cloudflare.com/ajax/libs/react/0.13.3/react-with-addons.js"></script>
+
+    <!-- Literally Canvas -->
+    <script src="{% static 'Test_App/js/literallycanvas.js' %}"></script>
+
+{% endblock %}
+{% block content %}
+
+    <div class="literally"></div>
+{% endblock %}
+{% block bodyscripts %}
+    <!-- kick it off -->
+    <script>
+        // Look ma, no jQuery!
+        LC.init(
+            document.getElementsByClassName('literally')[0],
+            {imageURLPrefix:  "{% static 'Test_App/img'%}"}
+        );
+
+        /* or if you just love jQuery,
+            $('.literally').literallycanvas({imageURLPrefix: "{% static 'Test_App/img'%}"})
+            or
+            LC.init($('.literally').get(0), {imageURLPrefix: "{% static 'Test_App/img'%}")
+        */
+    </script>
+
+
+
+{% endblock %}

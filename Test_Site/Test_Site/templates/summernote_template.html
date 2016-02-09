@@ -1,0 +1,11 @@
+{% extends "index.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block pagehead %}
+<link href="{% static 'Test_App/css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
+{% endblock %}
+{% block content %}
+{{ form|safe }}
+
+{% endblock %}
