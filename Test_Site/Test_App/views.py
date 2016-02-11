@@ -31,6 +31,7 @@ class IndexView(TemplateView):
 
 
 from django.contrib.auth.decorators import login_required
+from django.views.decorators.csrf import csrf_protect
 
 @login_required
 def FileView(request):
@@ -46,6 +47,7 @@ def FileView(request):
 
     data = {'form': form}
     return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+@csrf_protect
 @login_required
 def CanvasView2(request):
     if request.method == 'POST':

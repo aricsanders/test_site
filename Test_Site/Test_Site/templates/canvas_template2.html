@@ -40,29 +40,73 @@
 <div class="literally export-svg"></div>
 
 <form class="controls export-svg">
-  <input action="post" class="btn btn-primary" type="submit" data-action="export-as-svg" value="Export as SVG" />
+  <input  class="btn btn-primary" type="submit" data-action="export-as-svg" value="Export as SVG" />
 
 </form>
 {% endblock %}
 {% block bodyscripts %}
     <!-- kick it off -->
+
 <script>
+//using jQuery
+function getCookie(name) {
+    var cookieValue = null;
+    if (document.cookie && document.cookie != '') {
+        var cookies = document.cookie.split(';');
+        for (var i = 0; i < cookies.length; i++) {
+            var cookie = jQuery.trim(cookies[i]);
+            // Does this cookie string begin with the name we want?
+            if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                break;
+            }
+        }
+    }
+    return cookieValue;
+}
+var csrftoken = getCookie('csrftoken');
+//alert(csrftoken);
+/*
+function csrfSafeMethod(method) {
+    // these HTTP methods do not require CSRF protection
+    return (/^(GET|HEAD|OPTIONS|TRACE)$/.test(method));
+}
+$.ajaxSetup({
+    beforeSend: function(xhr, settings) {
+        if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+            xhr.setRequestHeader("X-CSRFToken", csrftoken);
+        }
+    }
+});
+*/
+
+
   $(document).ready(function() {
-             var url
-             var posturl
-             var csrfToken
-             csrfToken="{{ csrf_token }}"
-             posturl="{% url 'Canvas2' %}"
-            url="{% static 'Test_App/img'%}"
-    var lc = LC.init(document.getElementsByClassName('literally export-svg')[0],{imageURLPrefix: url });
+             var url;
+             var posturl;
+             posturl="{% url 'Canvas2' %}";
+            url="{% static 'Test_App/img'%}";
+
+            var request= new XMLHttpRequest();
+            var formData= new FormData()
+            var lc = LC.init(document.getElementsByClassName('literally export-svg')[0],{imageURLPrefix: url });
+            var svgString = lc.getSVGString();
+            var exportBlob=new Blob([lc.getSVGString()], {type: "image/svg"});
+            var formData=new FormData();
     $('.controls.export-svg [data-action=export-as-svg]').click(function(e) {
       e.preventDefault();
-      var svgString = lc.getSVGString();
-      //$.post($.ajax({posturl,"data":{"file:image/svg+xml;base64," + btoa(svgString)","csrf:"+csrfToken}}));
-      alert(csrfToken);
+      request.open("POST",posturl,true);
+      formData.append("file",new Blob([lc.getSVGString()], {type: "image/svg"}),"SVG.svg");
+      console.log(lc.getImage().toDataURL());
+      formData.append("csrfmiddlewaretoken",csrftoken); // This works, I am not sure why the header method does not
+
+      request.send(formData);
+
+
     });
   });
 </script>
+
 {% endblock%}
 
 
