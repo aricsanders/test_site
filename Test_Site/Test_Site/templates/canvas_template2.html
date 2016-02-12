@@ -14,10 +14,7 @@
     <!--<meta name="viewport" content="width=device-width, initial-scale=1"/>-->
     <!-- It is important to put the bootstrap scripts in the head -->
 {% block pagehead %}
-  <link rel="stylesheet" href="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/css/bootstrap.min.css"/>
-  <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
-  <script src="http://maxcdn.bootstrapcdn.com/bootstrap/3.3.5/js/bootstrap.min.js"></script>
- 
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/font-awesome/4.5.0/css/font-awesome.min.css">
  
    <!-- stylesheet -->
     <link href="{% static 'Test_App/css/literallycanvas.css' %}" rel="stylesheet" />
@@ -28,6 +25,9 @@
     <!-- Literally Canvas -->
     <script src="{% static 'Test_App/js/literallycanvas.js' %}"></script>
 
+    <!-- include summernote css/js-->
+   <link href="{% static 'Test_App/dist/summernote.css' %}" rel="stylesheet">
+    <script src="{% static 'Test_App/dist/summernote.js' %}"></script>
 {% endblock %}
 
 
@@ -37,12 +37,20 @@
 
 
  {% block content %}
+<button id="hide-canvas"class="btn btn-primary" type="submit" name="Hide Canvas">Hide Canvas </button>
+<div id="canvas-wrapper">
 <div class="literally export-svg"></div>
 
 <form class="controls export-svg">
   <input  class="btn btn-primary" type="submit" data-action="export-as-svg" value="Export as SVG" />
 
 </form>
+</div>
+<button id="hide-summernote"class="btn btn-primary" type="submit" name="Hide Summernote">Hide Notes</button>
+
+<div id="notes">
+<div id="summernote">Hello Summernote</div>
+    </div>
 {% endblock %}
 {% block bodyscripts %}
     <!-- kick it off -->
@@ -93,6 +101,9 @@ $.ajaxSetup({
             var svgString = lc.getSVGString();
             var exportBlob=new Blob([lc.getSVGString()], {type: "image/svg"});
             var formData=new FormData();
+    $('#hide-canvas').click(function(){
+  $('#canvas-wrapper').toggle();
+  });
     $('.controls.export-svg [data-action=export-as-svg]').click(function(e) {
       e.preventDefault();
       request.open("POST",posturl,true);
@@ -106,7 +117,15 @@ $.ajaxSetup({
     });
   });
 </script>
-
+<script>
+    $(document).ready(function() {
+  $('#summernote').summernote();
+  $('#hide-summernote').click(function(){
+  $('#notes').toggle();
+  console.log($('#summernote').summernote('code'))
+  });
+});
+</script>
 {% endblock%}
 
 
