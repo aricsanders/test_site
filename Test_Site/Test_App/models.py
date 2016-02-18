@@ -63,3 +63,25 @@ class UploadFile2(models.Model):
 class UploadCanvas(models.Model):
     owner=models.ForeignKey(User)
     file = models.FileField(upload_to=user_directory_path)
+
+class UserFiles(models.Model):
+    owner=models.ForeignKey(settings.AUTH_USER_MODEL)
+    location=models.CharField('Location on Disk', max_length=200) # Could use URL Field, but it is essentially just this
+    url=models.CharField('URL of the file', max_length=200)
+
+class UserFileDescription(models.Model):
+    resource=models.OneToOneField(UserFiles)
+    text=models.TextField('A text Description')
+
+class Project(models.Model):
+    owner=models.ForeignKey(settings.AUTH_USER_MODEL)
+    #project_group=models.ManyToManyField(settings.AUTH_USER_MODEL)
+    project_description=models.TextField('Project Description')
+    name=models.CharField('Project Name',max_length=200)
+
+class ProjectWall(models.Model):
+    project=models.OneToOneField(Project)
+    contributor=models.ForeignKey(settings.AUTH_USER_MODEL)
+    date=models.DateTimeField(default=datetime.datetime.today)
+    entry=models.TextField('Entry')
+

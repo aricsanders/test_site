@@ -7,8 +7,8 @@ from django.template import RequestContext
 from django.core.urlresolvers import reverse
 from django.shortcuts import render_to_response
 from django.contrib.auth.models import User
-from forms import *
-from models import UploadFile,UploadFile2
+from .forms import *
+from .models import *
 
 # 3rd party Imports
 
@@ -40,6 +40,8 @@ def FileView(request):
         if form.is_valid():
             new_file = UploadFile(owner=request.user,file = request.FILES['file'])
             new_file.save()
+            new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
+            new_registry_entry.save()
 
             return HttpResponseRedirect(reverse('Files'))
     else:
