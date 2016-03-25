@@ -20,7 +20,7 @@
 
 <body>
 {% block nav %}
-<nav class="navbar navbar-inverse" id="navbar">
+<nav class="navbar navbar-inverse navbar-fixed-top" id="navbar">
   <div class="container-fluid">
     <div class="navbar-header">
       <a class="navbar-brand" href="/"><span class="badge">Calnet</span></a>
@@ -61,24 +61,22 @@
 </nav>
 {% endblock %}
 
-
-
-
-    <div class="container-fluid" id="content">
-        {% block content %}<h1> Welcome to a Test Site </h1>
+      <div class="container-fluid " id="content">
+        {% block content %}
+          <div><h1> Welcome to a Test Site </h1>
         <hr/>
         <h2>This is a random science picture</h2>
         <img src="{% static 'Test_App/img/zoom-in.png'%}"/>
 
-
+        </div>
         {% endblock %}
-    </div>
+        </div>
 
-    <div id="footer">
+        <div id="footer">
         {% block footer %}
-        <hr />
+            <hr />
         {% endblock %}
-    </div>
+        </div>
 {% block bodyscripts %}
 <!--
 <script>
