@@ -38,34 +38,54 @@ from django.views.decorators.csrf import csrf_protect
 
 @login_required
 def FileView(request):
-    current_file=UserFiles.objects.last()
-    file_location=current_file.location
-    os.chdir(TESTS_DIRECTORY)
-    if file_location.split('.')[-1] in ['s2p']:
-        table=S2PV1(current_file.location)
-        xml=S2PV1_to_XMLDataTable(table)
-    elif file_location.split('.')[-1]==file_location:
-        table=JBSparameter(current_file.location)
-        old_prefix=table.get_frequency_units().replace('Hz','')
-        table.change_unit_prefix(column_selector=0,old_prefix=old_prefix,new_prefix='G',unit='Hz')
-        table.column_names=S2P_RI_COLUMN_NAMES
-        xml=AsciiDataTable_to_XMLDataTable(table,**{"style_sheet":"../XSL/S2P_STYLE.xsl"})
+    try:
+        current_file=UserFiles.objects.last()
+        file_location=current_file.location
+        os.chdir(TESTS_DIRECTORY)
+        if file_location.split('.')[-1] in ['s2p']:
+            table=S2PV1(current_file.location)
+            xml=S2PV1_to_XMLDataTable(table)
+        elif file_location.split('.')[-1]==file_location:
+            table=JBSparameter(current_file.location)
+            old_prefix=table.get_frequency_units().replace('Hz','')
+            table.change_unit_prefix(column_selector=0,old_prefix=old_prefix,new_prefix='G',unit='Hz')
+            table.column_names=S2P_RI_COLUMN_NAMES
+            xml=AsciiDataTable_to_XMLDataTable(table,**{"style_sheet":"../XSL/S2P_STYLE.xsl"})
 
-    out_string=xml.to_HTML()
-    if request.method == 'POST':
-        form = UploadFileForm2(request.POST, request.FILES)
-        if form.is_valid():
-            new_file = UploadFile(owner=request.user,file = request.FILES['file'])
-            new_file.save()
-            new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
-            new_registry_entry.save()
+        out_string=xml.to_HTML()
+        if request.method == 'POST':
+            form = UploadFileForm2(request.POST, request.FILES)
+            if form.is_valid():
+                new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+                new_file.save()
+                new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
+                new_registry_entry.save()
 
 
-            return HttpResponseRedirect(reverse('Files'))
-    else:
-        form = UploadFileForm()
-    data = {'form': form, 'current_table':out_string}
-    return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+                return HttpResponseRedirect(reverse('Files'))
+        else:
+            form = UploadFileForm()
+        data = {'form': form, 'current_table':out_string}
+        return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+    except:
+        out_string=""
+        if request.method == 'POST':
+            form = UploadFileForm2(request.POST, request.FILES)
+            if form.is_valid():
+                new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+                new_file.save()
+                new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
+                new_registry_entry.save()
+
+
+                return HttpResponseRedirect(reverse('Files'))
+        else:
+            form = UploadFileForm()
+        data = {'form': form, 'current_table':out_string}
+        return render_to_response('file_template.html', data, context_instance=RequestContext(request))
+
+
+
 @csrf_protect
 @login_required
 def CanvasView2(request):
