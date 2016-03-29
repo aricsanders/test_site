@@ -3,9 +3,6 @@
  */
 
 /* Move down content because we have a fixed navbar that is 50px tall */
-body {
-  padding-top: 50px;
-}
 
 
 /*
@@ -30,9 +27,7 @@ body {
  */
 
 /* Hide for mobile, show later */
-body {
-    padding-top: 65px;
-}
+
 .sidebar {
   display: none;
 }
