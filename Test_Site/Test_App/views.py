@@ -44,7 +44,7 @@ def FileView(request):
         os.chdir(TESTS_DIRECTORY)
         if file_location.split('.')[-1] in ['s2p']:
             table=S2PV1(current_file.location)
-            xml=S2PV1_to_XMLDataTable(table,**{"style_sheet":"../XSL/S2P_STYLE_02.xsl"})
+            xml=S2PV1_to_XMLDataTable(table)
 
         elif file_location.split('.')[-1] in ['s1p']:
             table=S1PV1(current_file.location)
