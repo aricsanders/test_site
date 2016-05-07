@@ -58,7 +58,7 @@ def FileView(request):
             xml=AsciiDataTable_to_XMLDataTable(table,**{"style_sheet":"../XSL/S2P_STYLE_02.xsl"})
 
         elif file_location.split('.')[-1] in ['asc','txt'] and not re.search('raw',file_location,re.IGNORECASE):
-            table=OnePortModel(file_location)
+            table=OnePortRawModel(file_location)
             xml=AsciiDataTable_to_XMLDataTable(table)
 
         elif file_location.split('.')[-1] in ['txt'] and re.search('raw',file_location,re.IGNORECASE):
