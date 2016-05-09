@@ -1,0 +1,55 @@
+{% extends "index.html" %}
+{% load i18n %}
+{% load staticfiles %}
+
+{% block pagehead %}
+<link href="{% static 'Test_App/css/dropzone.css' %}" type="text/css" rel="stylesheet"/>
+ <link href="{% static 'Test_App/css/dashboard.css' %}" rel="stylesheet">
+<style>
+    td {text-align:center;padding:3px;}
+    table, th, td {
+    border: 1px solid black;
+    border-collapse: collapse;
+}
+</style>
+{% endblock %}
+{% block content %}
+  <div class="container-fluid">
+  <div class="row">
+        <div class="col-sm-1 col-md-2 sidebar" style="position: fixed;">
+            <div class="btn-group-vertical" role="group" >
+             <h1 style="background-color:grey;color:red;">History</h1>
+            <button class="btn btn-primary">1-port </button>
+            <button class="btn btn-primary">2-port </button>
+            <button class="btn btn-primary">Power </button>
+
+            </div>
+        </div>
+        <div class="col-sm-11 col-sm-offset-1 col-md-10 col-md-offset-2 main">
+        <div class="container-fluid" id="content">
+       <!-- IMPORTANT enctype attribute! -->
+        <form class="dropzone" action="{% url 'Files' %}" method="post" enctype="multipart/form-data" id="my-dropzone">
+            {% csrf_token %}
+        </form>
+        <button class="btn btn-primary" id="submit-all">
+            Submit all files
+        </button>
+{% autoescape off %}
+{{ current_table }}
+{% endautoescape %}
+
+    </div>
+    </div>
+  </div>
+  </div>
+        <script src="{% static 'Test_App/js/dropzone.js' %}"></script>
+        <script src="{% static 'Test_App/js/DropZone_init.js' %}">
+        </script>
+
+
+{% endblock %}
+{% block footer %}
+<hr/>
+<h1>My Footer</h1>
+<hr/>
+{% endblock %}

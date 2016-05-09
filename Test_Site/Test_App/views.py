@@ -15,8 +15,21 @@ from pyMeasure.Code.DataHandlers.GeneralModels import *
 from pyMeasure.Code.DataHandlers.NISTModels import *
 from pyMeasure.Code.DataHandlers.TouchstoneModels import *
 from pyMeasure.Code.DataHandlers.Translations import *
+import pandas
+import math
 
 # Constants
+ONE_PORT_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\One_Port_Check_Standard.csv"
+TWO_PORT_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Two_Port_Check_Standard.csv"
+TWO_PORT_NR_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Two_Port_NR_Check_Standard.csv"
+POWER_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Power_Check_Standard.csv"
+COMBINED_ONE_PORT_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Combined_One_Port_Check_Standard.csv"
+COMBINED_TWO_PORT_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Combined_Two_Port_Check_Standard.csv"
+COMBINED_POWER_CHKSTD_CSV=r"C:\Share\Converted_Check_Standard\Combined_Power_Check_Standard.csv"
+ONE_PORT_CALREP_CSV=r"C:\Share\Converted_DUT\One_Port_DUT.csv"
+TWO_PORT_CALREP_CSV=r"C:\Share\Converted_DUT\Two_Port_DUT.csv"
+POWER_3TERM_CALREP_CSV=r"C:\Share\Converted_DUT\Power_3Term_DUT.csv"
+POWER_4TERM_CALREP_CSV=r"C:\Share\Converted_DUT\Power_4Term_DUT.csv"
 
 # Functions
 
@@ -35,6 +48,80 @@ class IndexView(TemplateView):
 
 from django.contrib.auth.decorators import login_required
 from django.views.decorators.csrf import csrf_protect
+def html_button_array(input_list,ncolumns=10):
+    """Creates an array of buttons in an html table given a list"""
+    nrows=math.ceil(float(len(input_list))/float(ncolumns))
+    nrows=int(nrows)
+    table_head="<table>"
+    output=table_head
+    for row in range(nrows):
+        output=output+"<tr>"
+        for column in range(ncolumns):
+            if column+nrows*row<len(input_list):
+                button_text='<td> <button class="btn btn-primary">{0}</button></td>'.format(input_list[column+nrows*row])
+                output=output+button_text
+            else:
+                pass
+        output=output+"</tr>"
+    table_end="</table>"
+    output=output+table_end
+    return output
+def html_anchor_array(input_list,ncolumns=10):
+    """Creates an array of buttons in an html table given a list"""
+    nrows=math.ceil(float(len(input_list))/float(ncolumns))
+    nrows=int(nrows)
+    table_head="<table>"
+    output=table_head
+    for row in range(nrows):
+        output=output+"<tr>"
+        for column in range(ncolumns):
+            if column+nrows*row<len(input_list):
+                href_text="/Test_App/CheckStandard/OnePort/{0}".format(input_list[column+nrows*row])
+                button_text='<td> <a href="{0}">{1}</button></td>'.format(href_text,input_list[column+nrows*row])
+                output=output+button_text
+            else:
+                pass
+        output=output+"</tr>"
+    table_end="</table>"
+    output=output+table_end
+    return output
+
+@login_required
+def checkstandard_view(request):
+    """A view that shows checkstandard data"""
+    try:
+        one_port_data_frame=pandas.read_csv(COMBINED_ONE_PORT_CHKSTD_CSV)
+        standards=one_port_data_frame["Device_Id"].unique()
+        out_string=html_anchor_array(standards)
+        if request.method == 'POST':
+            form = UploadFileForm2(request.POST, request.FILES)
+            if form.is_valid():
+                new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+                new_file.save()
+                new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
+                new_registry_entry.save()
+                return HttpResponseRedirect(reverse('CheckStandard'))
+        else:
+            form = UploadFileForm()
+        data = {'form': form, 'current_table':out_string}
+        return render_to_response('checkstandard.html', data, context_instance=RequestContext(request))
+    except:
+        out_string="\n<b>You Have Broken It</b> "
+        if request.method == 'POST':
+            form = UploadFileForm2(request.POST, request.FILES)
+            if form.is_valid():
+                new_file = UploadFile(owner=request.user,file = request.FILES['file'])
+                new_file.save()
+                new_registry_entry=UserFiles(owner=request.user,location=new_file.file.path,url=new_file.file.url)
+                new_registry_entry.save()
+                return HttpResponseRedirect(reverse('Files'))
+        else:
+            form = UploadFileForm()
+        data = {'form': form, 'current_table':out_string}
+        return render_to_response('checkstandard.html', data, context_instance=RequestContext(request))
+
+
+
 
 @login_required
 def FileView(request):
